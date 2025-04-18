@@ -16,8 +16,8 @@ Available Endpoints
 
     GET /users/:id – Get user by ID
 
-    POST /user – Add a new user
+    POST /users – Add a new user
 
-    PUT /user/:id – Update a user
+    PUT /users/:id – Update a user
 
-    DELETE /user/:id – Delete a user
+    DELETE /users/:id – Delete a user
