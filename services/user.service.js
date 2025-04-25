@@ -1,86 +1,97 @@
-const Users = [];
+import { logger } from "../log/logger.js";
+import Users from "../models/user.model.js";
+import { STATUS_MESSAGE } from "../utils/constants.js";
+import AppError from "../utils/errors/AppError.js";
 
 // Our service will be handling all the business logic
-const addUser = async (user) => {
-    const payload = {
-        id: Users[Users.length - 1]?.id + 1 || 1, // generating increment id
-        ...user,
-    }
-    Users.push(payload);
-    return {
-        message: 'User added successfully.',
-        data: payload,
-        status: 201
-    }
-}
-
-const getUsers = () => {
-    return {
-        status: 200,
-        message: 'Users fetch successfully.',
-        data: Users,
-    }
-}
-
-const getUser = (id) => {
-    const userIndex = Users.find((item) => item.id === Number(id));
-    if (!userIndex) {
+export const addUser = async (user) => {
+    try {
+        const newUser = new Users(user);
+        const addUser = await newUser.save();
         return {
-            status: 404,
-            message: 'User not found',
-        }
-    }
-    return {
-        status: 200,
-        message: 'User fetch successfully.',
-        data: userIndex,
+            message: "User added successfully",
+            statusCode: 201,
+            data: addUser,
+        };
+    } catch (error) {
+        logger.error(`Failed while saving Error => ${error.message}`)
+        throw new AppError(STATUS_MESSAGE[500], error, error.statusCode || 500)
     }
 }
 
-const updateUser = (id, payload) => {
-    // find and update based on index 
-    const userIndex = Users.findIndex((item) => item.id === Number(id))
-    if (userIndex === -1) {
+export const getUsers = async () => {
+    try {
+        // this is a simple find that fetch all records without any pagination
+        const users = await Users.find();
+
         return {
-            status: 404,
-            message: 'User not found.',
+            statusCode: 200,
+            message: 'Users fetch successfully.',
+            data: users,
         }
+    } catch (error) {
+        logger.error(`Failed while fetching Error => ${error.message}`)
+        throw new AppError(STATUS_MESSAGE[500], error, error.statusCode || 500)
     }
-
-    Users[userIndex] = {
-        ...Users[userIndex],
-        ...payload,
-    };
-
-    return {
-        status: 200,
-        message: 'User updated successfully.',
-        data: Users[userIndex],
-    };
 }
 
-const deleteUser = (id) => {
-    const userIndex = Users.findIndex((item) => item.id === Number(id))
-    if (userIndex === -1) {
+export const getUser = async (id) => {
+    try {
+        const user = await Users.findById(id);
+        if (!user) {
+            throw new AppError('User not found', user, 404)
+        }
         return {
-            status: 404,
-            message: 'User not found.',
+            statusCode: 200,
+            message: 'User fetch successfully.',
+            data: user,
         }
+    } catch (error) {
+        logger.error(`Failed while saving Error => ${error.message}`)
+        if (error instanceof AppError) throw error;
+        throw new AppError(STATUS_MESSAGE[500], error, error.statusCode || 500)
     }
-
-    const deleted = Users.splice(userIndex, 1);
-
-    return {
-        status: 200,
-        message: 'User deleted successfully.',
-        data: deleted[0],
-    };
 }
 
-module.exports = {
-    addUser,
-    getUsers,
-    getUser,
-    updateUser,
-    deleteUser
+export const updateUser = async (id, payload) => {
+    try {
+        const updateUser = await Users.findByIdAndUpdate(
+            id,
+            { $set: payload },
+            { new: true }
+        )
+        if (!updateUser) {
+            throw new AppError('Update is unsuccessfull, User not found.', updateUser, 404)
+        }
+
+        return {
+            statusCode: 200,
+            message: 'User updated successfully.',
+            data: updateUser,
+        };
+    } catch (error) {
+        logger.error(`Failed while saving Error => ${error.message}`);
+        if (error instanceof AppError) throw error;
+        throw new AppError(STATUS_MESSAGE[500], error, error.statusCode || 500)
+    }
+}
+
+export const deleteUser = async (id) => {
+
+    try {
+        const deletedUser = await Users.findByIdAndDelete(id)
+        if (!deletedUser) {
+            throw new AppError('Delete unsuccessfull, User not found.', deletedUser, 404)
+        }
+
+        return {
+            statusCode: 200,
+            message: 'User deleted successfully.',
+            data: deletedUser,
+        };
+    } catch (error) {
+        logger.error(`Failed while saving Error => ${error.message}`);
+        if (error instanceof AppError) throw error;
+        throw new AppError(STATUS_MESSAGE[500], error, error.statusCode || 500)
+    }
 }

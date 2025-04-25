@@ -1,20 +1,31 @@
-const Validations = require("./schemas");
+import * as Validations from "./validation/index.js";
+// the first one is the validate format that we will use for validating
+// second is for telling the code to either validate on params or not 
+export default function (validateFunc, params = false) {
+  // validate func provided from routes will be used here 
 
-module.exports = function (schemaName, params = false) {
-  // schema provided from routes will be used here 
-  if (!Validations.hasOwnProperty(schemaName))
-    return new Error(`'${schemaName}' schemaName is not exist`);
+  // checking if the validate func pass exist or not
+  if (!Object.prototype.hasOwnProperty.call(Validations, validateFunc)) {
+    return new Error(`'${validateFunc}' validateFunc is not exist`);
+  }
 
   return async function (req, res, next) {
     try {
-      if (params) { // validate on route param
-        await Validations[schemaName].validateAsync(req.params);
-      } else { // validate on route req body
-        const validated = await Validations[schemaName].validateAsync(req.body);
+      let validated;
+      // will validate param if exist else it will validate the body
+      if (params) {
+        validated = await Validations[validateFunc].validateAsync(req.params);
+        req.params = validated;
+      } else {
+        validated = await Validations[validateFunc].validateAsync(req.body);
         req.body = validated;
+
       }
+
+      // after validation is successfull we move to the next step using the next() keyword
       next();
     } catch (err) {
+      console.log('error', err.message)
       if (err.isJoi) return res.status(400).json({
         status: 400,
         message: err.message

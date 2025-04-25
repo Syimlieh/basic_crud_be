@@ -1,45 +1,59 @@
-const userService = require('../services/user.service');
+// I personally like to do this in controller instead of destructure each function because i sometimes use the same name for both controller and service. this allow me to reuse the name without any issue
+import * as UserService from "../services/user.service.js";
 
-// This is our controller which is responsible for routes handler
 // GET /users
-const getAllUsers = (req, res) => {
-    const response = userService.getUsers();
-    res.status(response.status).json(response);
+export const getAllUsers = async (req, res, next) => {
+    try {
+        const response = await UserService.getUsers(req.query);
+        return res.status(response.statusCode).json(response);
+    } catch (err) {
+        // this error is passed to our error handler. 
+        next(err);
+        // another option is by directly returned the res here too. this works too 
+    }
 };
 
-// GET /users/:id
-const getUserById = (req, res) => {
-    const { id } = req.params;
-    const response = userService.getUser(id);
-    res.status(response.status).json(response);
+// GET /user/:id
+export const getUserById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const response = await UserService.getUser(id);
+        return res.status(response.statusCode).json(response);
+    } catch (err) {
+        next(err);
+    }
 };
 
 // POST /user
-const createUser = async (req, res) => {
-    const payload = req.body;
-    const response = await userService.addUser(payload);
-    res.status(response.status).json(response);
+export const createUser = async (req, res, next) => {
+    try {
+        const payload = req.body;
+        const response = await UserService.addUser(payload);
+        return res.status(response.statusCode).json(response);
+    } catch (err) {
+        next(err);
+    }
 };
 
 // PUT /user/:id
-const updateUser = (req, res) => {
-    const { id } = req.params;
-    const payload = req.body;
-    const response = userService.updateUser(id, payload);
-    res.status(response.status).json(response);
+export const updateUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const payload = req.body;
+        const response = await UserService.updateUser(id, payload);
+        return res.status(response.statusCode).json(response);
+    } catch (err) {
+        next(err);
+    }
 };
 
 // DELETE /user/:id
-const deleteUser = (req, res) => {
-    const { id } = req.params;
-    const response = userService.deleteUser(id);
-    res.status(response.status).json(response);
-};
-
-module.exports = {
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    deleteUser,
+export const deleteUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const response = await UserService.deleteUser(id);
+        return res.status(response.statusCode).json(response);
+    } catch (err) {
+        next(err);
+    }
 };

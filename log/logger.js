@@ -1,11 +1,15 @@
-const winston = require("winston");
+// winston is use for logging
+import winston from "winston"
 
 const logConfiguration = {
   transports: [new winston.transports.Console()],
+  // defining the format of the log
   format: winston.format.combine(
     winston.format.label({
-      label: require("../package.json").name,
+      label: "simple_rest_be",
     }),
+
+    // addin a timestamp for every log
     winston.format.timestamp({
       format: "MMM-DD-YYYY HH:mm:ss",
     }),
@@ -16,6 +20,5 @@ const logConfiguration = {
   ),
 };
 
-const logger = winston.createLogger(logConfiguration);
-
-module.exports = logger;
+// use the bove config to create a logger 
+export const logger = winston.createLogger(logConfiguration);

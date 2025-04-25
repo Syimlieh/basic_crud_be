@@ -1,12 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const logger = require("./log/logger");
-const { errorHandler } = require("./middlewares/error.middleware");
-const httpLogger = require("./log/http.logger");
+import express from 'express';
+import cors from 'cors';
+import { logger } from './log/logger.js';
+import { httpLogger } from './log/http.logger.js';
+import connectDB from "./config/db.js"
+import errorHandler from "./middlewares/error.middleware.js"
+import dotenv from 'dotenv';
+import routes from "./routes.js";
 
 //dotenv for accessing env 
-require("dotenv").config();
+dotenv.config();
 
 const app = express();
 
@@ -18,19 +20,22 @@ app.use(httpLogger)
 
 // JSON Parsing
 app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true, limit: "500mb" }));
-
-// security
-app.use(helmet());
 
 // Routes
-require("./routes")(app);
+routes(app);
 
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 
 // start and listening to our server
-app.listen(PORT, () => {
-    logger.info(`Backend Server running on PORT: [${PORT}]`);
-});
+connectDB()
+    .then(() => {
+        app.listen(PORT, () => {
+            logger.info(`Backend Server running on PORT: [${PORT}]`);
+        });
+    })
+    .catch((err) => {
+        logger.error(`Error while starting server due to DB error ${err}`);
+        process.exit(1);
+    });
