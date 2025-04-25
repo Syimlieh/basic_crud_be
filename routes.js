@@ -18,7 +18,7 @@ export default (server) => {
 
     // here we will validate object id so that it only accept Mongo Object Id 
     // true here mean we are validating the req params
-    server.get("/user/:id", validator("validateObjectId", true), getUserById);
+    server.get("/users/:id", validator("validateObjectId", true), getUserById);
 
     // true mean for validating params and simple validation name means we are validating the req body
     server.put("/user/:id", validator("validateObjectId", true), validator("validateUpdateUser"), updateUser);

@@ -14,10 +14,11 @@ API Base URL: http://localhost:4000
 Available Endpoints
     GET /users – Fetch all users
 
-    GET /user/:id – Get user by ID
+    GET /users/:id – Get user by ID as per docs
 
     POST /user – Add a new user
 
     PUT /user/:id – Update a user
 
     DELETE /user/:id – Delete a user
+    
