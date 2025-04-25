@@ -11,6 +11,7 @@ const errorHandler = (err, req, res, next) => {
 
   // Respond with a structured error message
   res.status(statusCode).json({
+    statusCode,
     message: err.message || STATUS_MESSAGE[500],
     ...(process.env.NODE_ENV === 'development' && { detail: err?.details?.message }),
     // for development we can returned the detail of the error that will be coming from our AppError that capture our actual error

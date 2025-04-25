@@ -9,8 +9,8 @@ export const addUser = async (user) => {
         const newUser = new Users(user);
         const addUser = await newUser.save();
         return {
-            message: "User added successfully",
             statusCode: 201,
+            message: "User added successfully",
             data: addUser,
         };
     } catch (error) {

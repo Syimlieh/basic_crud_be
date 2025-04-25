@@ -1,8 +1,7 @@
-
 Description: This is a basic RESTful API built with Node.js, Express, Mongodb with mongoose and Joi for input validation. It supports CRUD operations for user management.
 
-
-Setup: 
+Make sure that node.js and mongo is installed in local system
+Setup:
     Clone the repository:  https://github.com/Syimlieh/basic_crud_be
     Go to the cloned directory and run " npm install "
     Start the application by running: " npm run dev "

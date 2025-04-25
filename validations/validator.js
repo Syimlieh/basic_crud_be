@@ -27,11 +27,11 @@ export default function (validateFunc, params = false) {
     } catch (err) {
       console.log('error', err.message)
       if (err.isJoi) return res.status(400).json({
-        status: 400,
+        statusCode: 400,
         message: err.message
       })
       return res.status(400).json({
-        status: 400,
+        statusCode: 400,
         message: 'Error while validating request'
       })
     }

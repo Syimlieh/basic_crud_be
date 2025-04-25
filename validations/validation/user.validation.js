@@ -23,11 +23,9 @@ export const validateCreateUser = Joi.object({
         Joi.string()
             .trim()
             .required()
-            .messages({
-                'string.empty': 'Hobby is required.',
-                'any.required': 'Hobby is mandatory.',
-            }),
-    )
+    ).required().messages({
+        'any.required': 'Hobby is mandatory.',
+    }),
 });
 
 // all field will be optional but will not allow empty string
