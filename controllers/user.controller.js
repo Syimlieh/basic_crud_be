@@ -1,6 +1,8 @@
 // I personally like to do this in controller instead of destructure each function because i sometimes use the same name for both controller and service. this allow me to reuse the name without any issue
 import * as UserService from "../services/user.service.js";
 
+// purpose of controller is to handle the routes so i moved the logic to service and input validation seperately as a middeware
+
 // GET /users
 export const getAllUsers = async (req, res, next) => {
     try {

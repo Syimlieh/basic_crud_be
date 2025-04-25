@@ -3,7 +3,7 @@ import Users from "../models/user.model.js";
 import { STATUS_MESSAGE } from "../utils/constants.js";
 import AppError from "../utils/errors/AppError.js";
 
-// Our service will be handling all the business logic
+// Our service will be handling all the business logic and saving to our db
 export const addUser = async (user) => {
     try {
         const newUser = new Users(user);

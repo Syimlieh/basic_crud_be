@@ -1,5 +1,5 @@
 
-Description: This is a basic RESTful API built with Node.js, Express, and Joi for input validation. It supports CRUD operations for user management. For simplicity, user data is stored in-memory using a JavaScript array (no database required).
+Description: This is a basic RESTful API built with Node.js, Express, Mongodb with mongoose and Joi for input validation. It supports CRUD operations for user management.
 
 
 Setup: 
@@ -8,16 +8,16 @@ Setup:
     Start the application by running: " npm run dev "
 
 
-API Base URL: http://localhost:4000/api/v1
+API Base URL: http://localhost:4000
 
 
 Available Endpoints
     GET /users – Fetch all users
 
-    GET /users/:id – Get user by ID
+    GET /user/:id – Get user by ID
 
-    POST /users – Add a new user
+    POST /user – Add a new user
 
-    PUT /users/:id – Update a user
+    PUT /user/:id – Update a user
 
-    DELETE /users/:id – Delete a user
+    DELETE /user/:id – Delete a user

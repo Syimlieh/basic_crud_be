@@ -10,7 +10,10 @@ class AppError extends Error {
 
     // any extra detail about the actual error
     this.details = details;
+
+    // will help us distinquish btw operation error(validation or db) or programming error
     this.isOperational = true;
+    // Makes error logs cleaner
     Error.captureStackTrace(this, this.constructor);
   }
 }
